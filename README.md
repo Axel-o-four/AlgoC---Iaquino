@@ -16,13 +16,20 @@ L'obiettivo è eliminare il gap tra la rappresentazione teorica degli algoritmi 
 
 - **Compilazione automatica**: dal codice algoc si genera C ottimizzato e eseguibile.
 - **Data type supportati**: i data type supportati sono `int`, `real`, `string` e `boolean`.
-- **Data structures supportate**: strutture di supporto alla progettazione di algoritmi, come `list`, `stack`, `queue`, `tree` e `graph`.
-- **Funzioni supportate**: funzioni di supporto alla gestione delle strutture dati, come funzioni di ricerca, ricerca del minimo e del massimo e di ordinamento.
-- **Strutture di controllo semplificate**: le strutture di controllo vengono ottimizzate per l'iterazione sugli elementi di una struttura dati, in più viene aggiunta la struttura di controllo `foreach`.
-- **Libreria di supporto**: tutte le strutture dati e le funzioni di supporto si trovano nella libreria di supporto `algoc.h`, automaticamente inclusa a compilazione del codice.
+- **Data structures supportate**: strutture di supporto alla progettazione di algoritmi, come `list`, `stack`, `queue`, `tree` e `graph`, con le rispettive funzioni vengono aggiunte dalla libreria di supporto `algoc.h`.
+- **Strutture di controllo semplificate**: le strutture di controllo vengono ottimizzate per l'iterazione sugli elementi di una struttura dati.
 - **Assegnazione semplificata**: l'assegnazione viene svolta tramite l'operatore `<-`.
 - **Operatori semplificati**: viene rimosso il supporto agli operatori bitwise, di poca utilità in questo campo, e viene semplificato l'uso degli operatori, divisi in:
   - **Aritmetici**: `+`,`-`,`*`,`/` e `%`.
   - **Relazionali**: `<`, `>`, `<=`, `>=` e `=`.
   - **Logici**: `|`, `&` e `!`.
 - **Passaggi commentabili**: è possibile aggiungere commenti in ogni punto del codice racchiudendo il testo tra `%`.
+
+### Struttura di progetto
+
+AlgoC/
+├── README.md                           # Questo file
+├── src/
+│   └── grammar.lark                    # Grammatica in EBNF per Lark
+└── Documentazione/
+    └── ~~ Documentazione grammatica.pdf   # Documentazione della grammatica di AlgoC ~~

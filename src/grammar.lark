@@ -1,0 +1,171 @@
+// Lark grammar for AlgoC
+
+?start: program
+
+// Program structure
+
+program: global_decls* "prog" body "endprog"
+
+global_decls: var_decl
+    | function_def
+    | procedure_def
+
+// Variable declaration
+
+var_decl: "var" decls "endvar"
+
+decls: decl+
+
+?decl: ids ":" type ";" -> var_declaration
+
+ids: ID ("," ID)*
+
+type: primitive_type
+    | array_type
+
+primitive_type: "int"
+    | "real"
+    | "char"
+    | "string"
+    | "boolean"
+
+array_type: primitive_type "[" INT_CONST "]"
+
+// Function and procedure definition
+
+function_def: "func" ID "(" func_params? ")" "->" return_type ":" body "endfunc"
+
+func_params: func_param ("," func_param)*
+
+func_param: ID ":" type
+
+return_type: type
+
+procedure_def: "proc" ID "(" proc_params? ")" ":" body "endproc"
+
+proc_params: proc_param ("," proc_param)*
+
+proc_param: param_direction? ID ":" type
+
+?param_direction: "out"
+
+// Body of program, function and procedure
+
+body: (var_decl | statement)*
+
+?statement: assignment_stmt
+          | function_call_stmt
+          | output_stmt
+          | input_stmt
+          | if_stmt
+          | while_stmt
+          | do_while_stmt
+          | for_stmt
+          | return_stmt
+
+// Statements
+
+assignment_stmt: lvalue "<-" expr ";"
+
+lvalue: ID
+    | array_access
+
+function_call_stmt: func_call ";"
+
+output_stmt: "-->" io_args ";"
+
+input_stmt: "<--" io_args ";"
+
+return_stmt: "return" expr ";"
+
+io_args: io_arg+
+
+?io_arg: expr
+       | "$" "(" expr ")"
+
+// Control structures
+
+if_stmt: "if" expr "then" body elif_clause* else_clause? "endif" ";"
+
+elif_clause: "elseif" expr "then" body
+
+else_clause: "else" body
+
+while_stmt: "while" expr "do" body "endwhile" ";"
+
+do_while_stmt: "do" body "while" expr ";" 
+
+for_stmt: "for" for_init "to" for_final "do" body "endfor" ";"
+
+for_init: ID "<-" expr
+
+for_final: expr
+
+// Expressions
+
+?expr: or_expr
+
+?or_expr: and_expr
+        | or_expr "|" and_expr -> or_op
+
+?and_expr: comparison_expr
+         | and_expr "&" comparison_expr -> and_op
+
+?comparison_expr: additive_expr
+                | comparison_expr "=" additive_expr -> eq_op
+                | comparison_expr "<>" additive_expr -> neq_op
+                | comparison_expr "<" additive_expr -> lt_op
+                | comparison_expr "<=" additive_expr -> le_op
+                | comparison_expr ">" additive_expr -> gt_op
+                | comparison_expr ">=" additive_expr -> ge_op
+
+?additive_expr: multiplicative_expr
+              | additive_expr "+" multiplicative_expr -> add_op
+              | additive_expr "-" multiplicative_expr -> sub_op
+
+?multiplicative_expr: unary_expr
+                    | multiplicative_expr "*" unary_expr -> mul_op
+                    | multiplicative_expr "/" unary_expr -> div_op
+                    | multiplicative_expr "%" unary_expr -> mod_op
+
+?unary_expr: primary_expr
+           | "!" unary_expr -> not_op
+           | "-" unary_expr -> neg_op
+
+?primary_expr: "(" expr ")"
+             | func_call
+             | array_access
+             | atom
+
+?atom: ID
+     | INT_CONST
+     | REAL_CONST
+     | CHAR_CONST
+     | STRING_CONST
+     | TRUE
+     | FALSE
+
+// Array access
+
+array_access: ID "[" expr "]"
+
+// Function calling
+
+func_call: ID "(" exprs? ")"
+
+exprs: expr ("," expr)*
+
+// Lexer rules
+
+COMMENT: /%(.|\n)*?%/
+TRUE: "true"
+FALSE: "false"
+ID: /[a-zA-Z][a-zA-Z0-9]*/
+INT_CONST: /[0-9]+/
+REAL_CONST: /[0-9]+\.[0-9]+/
+CHAR_CONST: /'([^'\\]|\\.)'/
+STRING_CONST: /"([^"\\]|\\.)*"/
+%declare TRUE FALSE
+%import common.WS
+%ignore WS
+%ignore COMMENT
